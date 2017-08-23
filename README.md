@@ -107,6 +107,19 @@ security:
 ```
 
 
+Configure UserBundle parameters
+-------------------------------
+
+Inside your parameters.yml
+
+```yaml
+parameters:
+    site_name: 'FooBar'
+    site_author: 'TangoMan'
+    mailer_from: tangoman@localhost.dev
+```
+
+
 Note
 ====
 

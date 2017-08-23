@@ -120,6 +120,20 @@ parameters:
 ```
 
 
+Update Twig Configuration
+-------------------------
+
+Inside your config.yml
+
+```yaml
+# Twig Configuration
+twig:
+    globals:
+        site_name:    "%site_name%"
+        site_author:  "%site_author%"
+        mailer_from:  "%mailer_from%"
+```
+
 Note
 ====
 

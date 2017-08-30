@@ -137,7 +137,7 @@ twig:
 Note
 ====
 
-If you find any bug please report here : [Issues](https://github.com/TangoMan75/RepositoryHelper/issues/new)
+If you find any bug please report here : [Issues](https://github.com/TangoMan75/UserBundle/issues/new)
 
 License
 =======

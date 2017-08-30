@@ -5,44 +5,43 @@
 {% block body %}
     <div class="container">
         <div class="jumbotron" style="padding: 2em;">
-            <div class="row" style="margin-bottom: 2em;">
-                <h2 class="text-center" style="margin-bottom: 1em;">Connexion</h2>
+            <h2 class="text-center" style="margin-bottom: 1em;">Connexion</h2>
 
-                <form method="post" action="{{ path('app_check') }}" class="form"
-                      style="max-width: 400px; margin: 0 auto;">
+            <form method="post" action="{{ path('app_check') }}" class="form"
+                  style="max-width: 400px; margin: 0 auto;">
 
-                    <label class="control-label" for="inputUsername">Nom d'utilisateur ou
-                        email</label>
-                    <div class="input-group" style="margin-bottom: 2em;">
-                        <label for="inputUsername" class="input-group-addon">
-                            <i class="glyphicon glyphicon-user"></i>
-                        </label>
-                        <input type="text" id="inputUsername" name="_username" value="{{ lastUsername }}"
-                               class="form-control" autofocus/>
-                    </div>
+                <label class="control-label" for="inputUsername">Nom d'utilisateur ou
+                    email</label>
+                <div class="input-group">
+                    <label for="inputUsername" class="input-group-addon">
+                        <i class="glyphicon glyphicon-user"></i>
+                    </label>
+                    <input type="text" id="inputUsername" name="_username" value="{{ lastUsername }}"
+                           class="form-control" autofocus/>
+                </div>
+                <br/>
 
-                    <label class="control-label" for="inputPassword">Mot de passe</label>
-                    <div class="input-group" style="margin-bottom: 2em;">
-                        <label for="inputPassword" class="input-group-addon">
-                            <i class="glyphicon glyphicon-lock"></i>
-                        </label>
-                        <input type="password" id="inputPassword" name="_password" class="form-control"/>
-                    </div>
+                <label class="control-label" for="inputPassword">Mot de passe</label>
+                <div class="input-group">
+                    <label for="inputPassword" class="input-group-addon">
+                        <i class="glyphicon glyphicon-lock"></i>
+                    </label>
+                    <input type="password" id="inputPassword" name="_password" class="form-control"/>
+                </div>
+                <br/>
 
-                    <div class="text-center">
-                        <button class="btn btn-primary">
-                            <i class="glyphicon glyphicon-lock"></i> Se connecter
-                        </button>
-                    </div>
-                </form>
-            </div>
+                <div class="text-center">
+                    <button class="btn btn-primary">
+                        <i class="glyphicon glyphicon-lock"></i> Se connecter
+                    </button>
+                </div>
+            </form>
+            <br/>
 
-            <div class="row">
-                <p class="text-center">
-                    <small><a href="{{ path('app_security_passwordreset') }}">J'ai oublié mon mot de passe.</a>
-                    </small>
-                </p>
-            </div>
+            <p class="text-center">
+                <small><a href="{{ path('app_security_passwordreset') }}">J'ai oublié mon mot de passe.</a>
+                </small>
+            </p>
 
         </div>
     </div>

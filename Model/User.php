@@ -93,7 +93,7 @@ abstract class User implements UserInterface
      *
      * @param string $email
      *
-     * @return User
+     * @return $this
      */
     public function setEmail($email)
     {
@@ -111,7 +111,7 @@ abstract class User implements UserInterface
      *
      * @param string $username
      *
-     * @return User
+     * @return $this
      */
     public function setUsername($username)
     {
@@ -147,7 +147,7 @@ abstract class User implements UserInterface
      *
      * @param string $password
      *
-     * @return User
+     * @return $this
      */
     public function setPassword($password)
     {

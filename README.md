@@ -3,40 +3,117 @@ TangoMan User Bundle
 
 **TangoMan User Bundle** provides basis for user management.
 
+Installation
+============
 
-How to install
---------------
+Step 1: Download the Bundle
+---------------------------
 
-With composer
+Open a command console, enter your project directory and execute the
+following command to download the latest stable version of this bundle:
 
-```console
+```bash
 $ composer require tangoman/user-bundle
 ```
 
+This command requires you to have Composer installed globally, as explained
+in the [installation chapter](https://getcomposer.org/doc/00-intro.md)
+of the Composer documentation.
 
-Enable the bundle
------------------
+Step 2: Enable the Bundle
+-------------------------
 
-Don't forget to enable the bundle in the kernel:
+Then, enable the bundle by adding it to the list of registered bundles
+in the `app/AppKernel.php` file of your project:
 
 ```php
 <?php
 // app/AppKernel.php
 
-public function registerBundles()
+// ...
+class AppKernel extends Kernel
 {
-    $bundles = array(
+    // ...
+
+    public function registerBundles()
+    {
+        $bundles = array(
+            // ...
+            new TangoMan\UserBundle\TangoManUserBundle(),
+        );
+
         // ...
-        new TangoMan\UserBundle\TangoManUserBundle(),
-    );
+    }
 }
 ```
 
+Step 3: Configure UserBundle routes
+-----------------------------------
 
-Create your User entity
------------------------
+Enable UserBundle controllers by adding following code in the `app/config/routing.yml` file of your project.
 
-Don't forget to implement user roles.
+```yaml
+tangoman_user:
+    resource: "@TangoManUserBundle/Controller/"
+    type:     annotation
+```
+
+Step 4: Configure Symfony firewall
+----------------------------------
+
+Enable UserBundle to handle user login/logout by adding following code in the `app/config/security.yml` file of your project.
+
+```yaml
+security:
+    firewalls:
+        admin:
+            anonymous: ~
+            provider: database
+            pattern: ^/
+            form_login:
+                login_path: app_login
+                check_path: app_check
+                default_target_path: homepage
+            logout:
+                path: app_logout
+                target: homepage
+                invalidate_session: true
+```
+
+Step 5: Configure UserBundle parameters
+---------------------------------------
+
+UserBundle need these settings to handle user registration, password reset emails.
+
+Add following code in the `app/config/parameters.yml` file of your project.
+
+```yaml
+parameters:
+    site_name:   "FooBar"
+    site_author: "TangoMan"
+    mailer_from: "tangoman@localhost.dev"
+```
+
+Step 6: Update Twig Configuration
+---------------------------------
+
+Enable twig to handle global variables by adding following code in the `app/config/config.yml` file of your project.
+
+```yaml
+# Twig Configuration
+twig:
+    globals:
+        site_name:   "%site_name%"
+        site_author: "%site_author%"
+        mailer_from: "%mailer_from%"
+```
+
+Step 7: Create User entity
+--------------------------
+
+Your User entity must extend `TangoMan\UserBundle\Model\User` class.
+
+Your User entity must implement `getRoles()` method.
 
 ```php
 <?php
@@ -71,69 +148,6 @@ class User extends TangoManUser
 }
 ```
 
-
-Configure UserBundle routes
----------------------------
-
-Inside your routing.yml
-
-```yaml
-tangoman_user:
-    resource: "@TangoManUserBundle/Controller/"
-    type:     annotation
-```
-
-
-Configure UserBundle firewall
------------------------------
-
-Inside your security.yml
-
-```yaml
-security:
-    firewalls:
-        admin:
-            anonymous: ~
-            provider: database
-            pattern: ^/
-            form_login:
-                login_path: app_login
-                check_path: app_check
-                default_target_path: homepage
-            logout:
-                path: app_logout
-                target: homepage
-                invalidate_session: true
-```
-
-
-Configure UserBundle parameters
--------------------------------
-
-Inside your parameters.yml
-
-```yaml
-parameters:
-    site_name: 'FooBar'
-    site_author: 'TangoMan'
-    mailer_from: tangoman@localhost.dev
-```
-
-
-Update Twig Configuration
--------------------------
-
-Inside your config.yml
-
-```yaml
-# Twig Configuration
-twig:
-    globals:
-        site_name:    "%site_name%"
-        site_author:  "%site_author%"
-        mailer_from:  "%mailer_from%"
-```
-
 Note
 ====
 
@@ -144,14 +158,14 @@ License
 
 Copyrights (c) 2017 Matthias Morin
 
-[![License][license-GPL]][license-url]
-Distributed under the GPLv3.0 license.
+[![License][license-MIT]][license-url]
+Distributed under the MIT license.
 
 If you like **TangoMan User Bundle** please star!
 And follow me on GitHub: [TangoMan75](https://github.com/TangoMan75)
 ... And check my other cool projects.
 
-[tangoman.free.fr](http://tangoman.free.fr)
+[Matthias Morin | LinkedIn](https://www.linkedin.com/in/morinmatthias)
 
 [license-GPL]: https://img.shields.io/badge/Licence-GPLv3.0-green.svg
 [license-MIT]: https://img.shields.io/badge/Licence-MIT-green.svg

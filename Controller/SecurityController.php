@@ -83,7 +83,7 @@ class SecurityController extends Controller
             $msg['btn'] = 'Réinitialiser mon mot de passe';
             $msg['token'] = $this->genToken($user, 'password_reset');
 
-            $this->sendEmail($user, $msg, 'email/token.html.twig');
+            $this->sendEmail($user, $msg, '@TangoManUser/email/token.html.twig');
             $this->confirmMessage($user, $msg);
 
             return $this->redirectToRoute('homepage');
@@ -261,6 +261,9 @@ class SecurityController extends Controller
      */
     public function sendEmail(User $user, $msg, $view)
     {
+
+        dump($view);
+
         // Sends email to user
         $message = \Swift_Message::newInstance()
             ->setSubject($this->getParameter('site_name').' | '.$msg['title'])

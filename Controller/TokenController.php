@@ -1,4 +1,10 @@
 <?php
+/**
+ * Copyright (c) 2018 Matthias Morin <matthias.morin@gmail.com>
+ *
+ * This source file is subject to the MIT license that is bundled
+ * with this source code in the file LICENSE.
+ */
 
 namespace TangoMan\UserBundle\Controller;
 
@@ -15,6 +21,7 @@ use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
  */
 class TokenController extends Controller
 {
+
     /**
      * Security token front controller.
      * @Route("/{token}", name="app_token_call")
@@ -27,16 +34,16 @@ class TokenController extends Controller
     public function callAction(Request $request, $token)
     {
         // JSON Web Token validation
-        $jwt = $this->get('tangoman_jwt')->decode($token);
-        $id = $jwt->get('id');
+        $jwt      = $this->get('tangoman_jwt')->decode($token);
+        $id       = $jwt->get('id');
         $username = $jwt->get('username');
-        $email = $jwt->get('email');
-        $action = $jwt->get('action');
-        $params = $jwt->get('params');
-        $login = $jwt->get('login');
+        $email    = $jwt->get('email');
+        $action   = $jwt->get('action');
+        $params   = $jwt->get('params');
+        $login    = $jwt->get('login');
 
         // Display error message when token is invalid
-        if (!$jwt->isValid()) {
+        if ( ! $jwt->isValid()) {
             $this->get('session')->getFlashBag()->add(
                 'error',
                 'Désolé <strong>'.$username.'</strong><br />'.
@@ -52,11 +59,11 @@ class TokenController extends Controller
         }
 
         // Find user
-        $em = $this->get('doctrine')->getManager();
+        $em   = $this->get('doctrine')->getManager();
         $user = $em->getRepository('AppBundle:User')->find($id);
 
         // When user doesn't exist
-        if (!$user) {
+        if ( ! $user) {
             $this->get('session')->getFlashBag()->add(
                 'error',
                 'Désolé <strong>'.$username.'</strong> ce compte n\'existe pas.'
@@ -71,7 +78,8 @@ class TokenController extends Controller
         }
 
         // Check user data
-        if ($user->getId() != $id || $user->getUsername() != $username || $user->getEmail() != $email) {
+        if ($user->getId() != $id || $user->getUsername() != $username
+            || $user->getEmail() != $email) {
             $this->get('session')->getFlashBag()->add(
                 'error',
                 'Désolé <strong>'.$username.'</strong><br />'.
@@ -102,13 +110,16 @@ class TokenController extends Controller
     public function account_create(Request $request, $username, $email)
     {
         // Checks if user already exists
-        $em = $this->get('doctrine')->getManager();
-        $user = $em->getRepository('AppBundle:User')->findOneBy(['email' => $email]);
+        $em   = $this->get('doctrine')->getManager();
+        $user = $em->getRepository('AppBundle:User')->findOneBy(
+            ['email' => $email]
+        );
 
         if ($user) {
             $this->get('session')->getFlashBag()->add(
                 'error',
-                'Un utilisateur est déjà enregistré avec l\'email: <strong>'.$email.'</strong>.<br/>'
+                'Un utilisateur est déjà enregistré avec l\'email: <strong>'
+                .$email.'</strong>.<br/>'
             );
 
             return $this->redirectToRoute('homepage');
@@ -127,7 +138,7 @@ class TokenController extends Controller
         if ($form->isSubmitted() && $form->isValid()) {
             // Hash password
             $encoder = $this->get('security.password_encoder');
-            $hash = $encoder->encodePassword($user, $user->getPassword());
+            $hash    = $encoder->encodePassword($user, $user->getPassword());
             $user->setPassword($hash);
 
             // Persists new user
@@ -140,7 +151,11 @@ class TokenController extends Controller
 
             // Send welcome message
             $msg['title'] = 'Bienvenue';
-            $this->sendEmail($user, $msg, '@TangoManUser/email/user-welcome.html.twig');
+            $this->sendEmail(
+                $user,
+                $msg,
+                '@TangoManUser/email/user-welcome.html.twig'
+            );
 
             return $this->redirectToRoute('homepage');
         }
@@ -168,7 +183,7 @@ class TokenController extends Controller
         if ($form->isSubmitted() && $form->isValid()) {
             // Hash password
             $encoder = $this->get('security.password_encoder');
-            $hash = $encoder->encodePassword($user, $user->getPassword());
+            $hash    = $encoder->encodePassword($user, $user->getPassword());
             $user->setPassword($hash);
 
             // Persists new password
@@ -213,7 +228,8 @@ class TokenController extends Controller
 
             $this->get('session')->getFlashBag()->add(
                 'success',
-                'L\'email de contact à bien été changé pour le compte <strong>'.$user->getUsername().'</strong>.'
+                'L\'email de contact à bien été changé pour le compte <strong>'
+                .$user->getUsername().'</strong>.'
             );
 
             return $this->redirectToRoute('homepage');
@@ -238,8 +254,12 @@ class TokenController extends Controller
      *
      * @return \Symfony\Component\HttpFoundation\RedirectResponse|\Symfony\Component\HttpFoundation\Response
      */
-    public function account_recovery(Request $request, User $user, $username, $email)
-    {
+    public function account_recovery(
+        Request $request,
+        User $user,
+        $username,
+        $email
+    ) {
         // Restores username
         $user->setUsername($username);
 
@@ -259,7 +279,7 @@ class TokenController extends Controller
         if ($form->isSubmitted() && $form->isValid()) {
             // Hash password
             $encoder = $this->get('security.password_encoder');
-            $hash = $encoder->encodePassword($user, $user->getPassword());
+            $hash    = $encoder->encodePassword($user, $user->getPassword());
             $user->setPassword($hash);
 
             // Persists new password
@@ -296,7 +316,8 @@ class TokenController extends Controller
         if (in_array('ROLE_ADMIN', $user->getRoles())) {
             $this->get('session')->getFlashBag()->add(
                 'error',
-                'Désolé, <strong>'.$username.'</strong><br />Il n\'est pas autorisé de supprimer un utilisateur avec des droit d\'administration.'
+                'Désolé, <strong>'.$username
+                .'</strong><br />Il n\'est pas autorisé de supprimer un utilisateur avec des droit d\'administration.'
             );
 
             return $this->redirectToRoute('homepage');
@@ -339,7 +360,7 @@ class TokenController extends Controller
         if ($form->isSubmitted() && $form->isValid()) {
             // Hash password
             $encoder = $this->get('security.password_encoder');
-            $hash = $encoder->encodePassword($user, $user->getPassword());
+            $hash    = $encoder->encodePassword($user, $user->getPassword());
             $user->setPassword($hash);
 
             // Persist new password
@@ -349,13 +370,22 @@ class TokenController extends Controller
 
             $this->get('session')->getFlashBag()->add(
                 'success',
-                'Un nouveau mot de passe à bien été créé pour le compte <strong>'.$user->getUsername().'</strong>.'
+                'Un nouveau mot de passe à bien été créé pour le compte <strong>'
+                .$user->getUsername().'</strong>.'
             );
 
             // Start user session
-            $sessionToken = new UsernamePasswordToken($user, null, 'database', $user->getRoles());
+            $sessionToken = new UsernamePasswordToken(
+                $user,
+                null,
+                'database',
+                $user->getRoles()
+            );
             $this->get('security.token_storage')->setToken($sessionToken);
-            $this->get('session')->set('_security_main', serialize($sessionToken));
+            $this->get('session')->set(
+                '_security_main',
+                serialize($sessionToken)
+            );
 
             return $this->redirectToRoute('homepage');
         }
@@ -378,7 +408,8 @@ class TokenController extends Controller
     {
         $this->get('session')->getFlashBag()->add(
             'success',
-            'Bonjour <strong>'.$user->getUsername().'</strong>! <br />Bienvenue.'
+            'Bonjour <strong>'.$user->getUsername()
+            .'</strong>! <br />Bienvenue.'
         );
 
         return $this->redirectToRoute('homepage');
@@ -392,7 +423,12 @@ class TokenController extends Controller
     public function loginUser(User $user)
     {
         // Start user session
-        $sessionToken = new UsernamePasswordToken($user, null, 'database', $user->getRoles());
+        $sessionToken = new UsernamePasswordToken(
+            $user,
+            null,
+            'database',
+            $user->getRoles()
+        );
         $this->get('security.token_storage')->setToken($sessionToken);
         $this->get('session')->set('_security_main', serialize($sessionToken));
     }
@@ -407,19 +443,22 @@ class TokenController extends Controller
     {
         // Sends email to user
         $message = \Swift_Message::newInstance()
-            ->setSubject($this->getParameter('site_name').' | '.$msg['title'])
-            ->setFrom($this->getParameter('mailer_from'))
-            ->setTo($user->getEmail())
-            ->setBody(
-                $this->renderView(
-                    $view,
-                    [
-                        'user' => $user,
-                        'msg'  => $msg,
-                    ]
-                ),
-                'text/html'
-            );
+                                 ->setSubject(
+                                     $this->getParameter('site_name').' | '
+                                     .$msg['title']
+                                 )
+                                 ->setFrom($this->getParameter('mailer_from'))
+                                 ->setTo($user->getEmail())
+                                 ->setBody(
+                                     $this->renderView(
+                                         $view,
+                                         [
+                                             'user' => $user,
+                                             'msg'  => $msg,
+                                         ]
+                                     ),
+                                     'text/html'
+                                 );
 
         $this->get('mailer')->send($message);
     }

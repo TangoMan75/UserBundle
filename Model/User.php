@@ -1,4 +1,10 @@
 <?php
+/**
+ * Copyright (c) 2018 Matthias Morin <matthias.morin@gmail.com>
+ *
+ * This source file is subject to the MIT license that is bundled
+ * with this source code in the file LICENSE.
+ */
 
 namespace TangoMan\UserBundle\Model;
 
@@ -14,13 +20,15 @@ use TangoMan\EntityHelper\Traits\Timestampable;
  * Class User
  * @ORM\HasLifecycleCallbacks()
  * @UniqueEntity(fields={"email"}, message="Cet email est déjà utilisé.")
- * @UniqueEntity(fields={"username"}, message="Ce nom d'utilisateur est déjà utilisé.")
+ * @UniqueEntity(fields={"username"}, message="Ce nom d'utilisateur est déjà
+ *                                    utilisé.")
  *
- * @author  Matthias Morin <tangoman@free.fr>
- * @package TangoMan\UserBundle\Entity
+ * @author  Matthias Morin <matthias.morin@gmail.com>
+ * @package TangoMan\UserBundle\Model
  */
 abstract class User implements UserInterface
 {
+
     use Sluggable;
     use Timestampable;
 
@@ -35,7 +43,10 @@ abstract class User implements UserInterface
     /**
      * @var string
      * @ORM\Column(type="string", length=255, unique=true)
-     * @Assert\Expression("value not in ['delete','edit','new','register','unsubscribe']", message="Désolé, ce nom d'utilisateur est réservé.")
+     * @Assert\Expression("value not in
+     *                           ['delete','edit','new','register','unsubscribe']",
+     *                           message="Désolé, ce nom d'utilisateur est
+     *                           réservé.")
      * @Assert\NotBlank(message="Merci de renseigner un nom d'utilisateur.")
      */
     protected $username;
@@ -51,10 +62,12 @@ abstract class User implements UserInterface
     /**
      * @var string User's password hash
      * @ORM\Column(type="string", length=255, nullable=true)
-     * @Assert\Length(min=8, minMessage="Votre mot de passe doit contenir au moins {{ limit }} caractères.")
+     * @Assert\Length(min=8, minMessage="Votre mot de passe doit contenir au
+     *                       moins {{ limit }} caractères.")
      * @Assert\Regex(
      *     pattern="/(?=.*\d)(?=.*[a-z])(?=.*[A-Z])/",
-     *     message="Votre mot de passe doit au moins contenir une minuscule, une majuscule et un chiffre."
+     *     message="Votre mot de passe doit au moins contenir une minuscule,
+     *     une majuscule et un chiffre."
      * )
      */
     protected $password;
@@ -64,7 +77,7 @@ abstract class User implements UserInterface
      */
     public function __construct()
     {
-        $this->created = new \DateTimeImmutable();
+        $this->created  = new \DateTimeImmutable();
         $this->modified = new \DateTimeImmutable();
     }
 
@@ -103,7 +116,8 @@ abstract class User implements UserInterface
     }
 
     /**
-     * these methods are required by Symfony\Component\Security\Core\User\UserInterface
+     * these methods are required by
+     * Symfony\Component\Security\Core\User\UserInterface
      */
 
     /**
@@ -117,7 +131,7 @@ abstract class User implements UserInterface
     {
         $this->username = $username;
 
-        if (!$this->slug) {
+        if ( ! $this->slug) {
             $this->setUniqueSlug($this->username);
         }
 
@@ -186,7 +200,7 @@ abstract class User implements UserInterface
      */
     public function setDefaults()
     {
-        if (!$this->slug) {
+        if ( ! $this->slug) {
             $this->setUniqueSlug($this->username);
         }
     }
